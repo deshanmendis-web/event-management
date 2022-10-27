@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Event Management System:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Event_Management_System_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Event Management System" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$USER_HOME$/Downloads/mysql-connector-java-8.0.13.jar" />
+          <element id="file-copy" path="$USER_HOME$/Downloads/jstl-1.2.jar" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="Event Management System/web/Web" />
+    </root>
+  </artifact>
+</component>
