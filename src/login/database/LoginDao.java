@@ -1,56 +1,51 @@
 package login.database;
 
 // Import Packages Needed
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 // Import Login Model
 import login.bean.LoginBean;
+import connection.DBConnection;
 
 public class LoginDao {
+    public String authenticateUser(LoginBean loginBean)
+    {
+        String email = loginBean.getEmail();
+        String password = loginBean.getPassword();
+        int role = loginBean.getRole();
 
-    // Exception Handling
-    public boolean validate(LoginBean loginBean) throws ClassNotFoundException {
-        boolean status = false;
+        Connection con = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
 
-        Class.forName("com.mysql.jdbc.Driver");
+        String emailDB = "";
+        String passwordDB = "";
+        int roleDB = 0;
 
-        try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/event_management?useSSL=false", "root", "");
+        try
+        {
+            con = DBConnection.createConnection();
+            statement = con.createStatement();
+            resultSet = statement.executeQuery("select email,password,role from users");
 
-                // Step 2:Create a statement using connection object
-                PreparedStatement preparedStatement = connection
-                     .prepareStatement("select * from users where email = ? and password = ? ")) {
-            preparedStatement.setString(1, loginBean.getEmail());
-            preparedStatement.setString(2, loginBean.getPassword());
+            while(resultSet.next())
+            {
+                emailDB = resultSet.getString("email");
+                passwordDB = resultSet.getString("password");
+                roleDB = resultSet.getInt("role");
 
-            System.out.println(preparedStatement);
-            ResultSet rs = preparedStatement.executeQuery();
-            status = rs.next();
-
-        } catch (SQLException e) {
-            // process sql exception
-            printSQLException(e);
-        }
-        return status;
-    }
-
-    private void printSQLException(SQLException ex) {
-        for (Throwable e: ex) {
-            if (e instanceof SQLException) {
-                e.printStackTrace(System.err);
-                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
-                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
-                System.err.println("Message: " + e.getMessage());
-                Throwable t = ex.getCause();
-                while (t != null) {
-                    System.out.println("Cause: " + t);
-                    t = t.getCause();
-                }
+                if(email.equals(emailDB) && password.equals(passwordDB) && roleDB==1)
+                    return "Admin_Role";
+                else if(email.equals(emailDB) && password.equals(passwordDB) && roleDB==2)
+                    return "User_Role";
+                else if(email.equals(emailDB) && password.equals(passwordDB) && roleDB==3)
+                    return "Moderator_Role";
             }
         }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return "Invalid user credentials";
     }
 }

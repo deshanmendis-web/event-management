@@ -12,9 +12,10 @@
   <div class="form sign-in-container">
     <form action="SaveUserServlet" method="post">
       <h1>Sign UP</h1>
-      <input type="email" name="email" placeholder="User Email">
-      <input type="password" name="password" placeholder="Password">
+      <input type="email" name="txtEmail" placeholder="User Email">
+      <input type="password" name="txtPassword" placeholder="Password">
       <input type="password" placeholder="Retype Password">
+      <input type="text" name="cmbRole" value="2" style="display: none">
       <button type="submit">Sign Up</button>
     </form>
   </div>
